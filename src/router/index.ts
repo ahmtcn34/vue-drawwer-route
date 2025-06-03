@@ -33,20 +33,16 @@ const routes: Array<RouteRecordRaw> = [
             drawer: () => import('@/components/user-detail-drawer.vue')
         },
     },
-    // Hem Home hem de About için ortak modal rotası
     {
         path: '/modal/:modalType/:id?',
         name: 'Modal',
         components: {
-            default: Home, // Varsayılan olarak Home - beforeEnter'da kontrol edilecek
+            default: Home,
             modal: () => import('@/components/modal.vue')
         },
-        // beforeEnter guard'ı ile hangi default view'ın gösterileceğini belirleriz
         beforeEnter: (to, from, next) => {
-            // from rotasının adına göre hangi view gösterilecek belirlenir
             const fromRouteName = from.name?.toString() || '';
 
-            // Eğer About sayfasından geliyorsa, meta verisine kaydet
             if (fromRouteName.includes('About')) {
                 to.meta.view = 'about';
             } else {
@@ -55,16 +51,14 @@ const routes: Array<RouteRecordRaw> = [
             next();
         }
     },
-    // About sayfasından açılan modallar için özel bir yönlendirme rotası
     {
         path: '/modal/:modalType/:id?',
         name: 'ModalFromAbout',
         components: {
-            default: () => import('@/views/about.vue'), // About sayfası için
+            default: () => import('@/views/about.vue'),
             modal: () => import('@/components/modal.vue')
         },
         beforeEnter: (to, _, next) => {
-            // Meta verisine about olduğunu kaydet
             to.meta.view = 'about';
             next();
         }
@@ -76,9 +70,7 @@ const router = createRouter({
     routes,
 });
 
-// Globally handle modal navigation to keep consistency
 router.beforeEach((to, from, next) => {
-    // Eğer modal rotasına gidiliyorsa ve from about ise, ModalFromAbout'a yönlendir
     if (to.name === 'Modal' && from.name?.toString().includes('About')) {
         next({
             name: 'ModalFromAbout',
