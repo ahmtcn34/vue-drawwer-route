@@ -7,6 +7,13 @@
             </li>
         </ul>
         <h1>Members</h1>
+
+        <div class="modal-test-buttons">
+            <button class="modal-button info" @click="openModal('info')">Bilgi Modalı</button>
+            <button class="modal-button warning" @click="openModal('warning')">Uyarı Modalı</button>
+            <button class="modal-button confirm" @click="openModal('confirm', 1)">Onay Modalı</button>
+        </div>
+
         <div class="members-table-container">
             <table class="members-table">
                 <thead>
@@ -39,7 +46,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import router from '../router';
+import { useRouter } from 'vue-router';
+import { openModal as openModalHelper } from '@/utils/modalHelper';
+
+const router = useRouter();
 
 const members = [
     { id: 1, firstName: 'John', lastName: 'Doe', phone: '+90 555 123 4567', email: 'john.doe@example.com' },
@@ -54,7 +64,9 @@ const members = [
     { id: 10, firstName: 'Sophia', lastName: 'Hernandez', phone: '+90 555 765 4321', email: 'sophia.hernandez@example.com' }
 ];
 
-
+function openModal(modalType, id = null) {
+    openModalHelper(router, 'home', modalType, id);
+}
 </script>
 
 <style scoped>
@@ -94,6 +106,46 @@ const members = [
 
 .nav-link:hover::after {
     width: 100%;
+}
+
+.modal-test-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.modal-button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.modal-button.info {
+    background-color: #0074e4;
+}
+
+.modal-button.info:hover {
+    background-color: #0064c8;
+}
+
+.modal-button.warning {
+    background-color: #e67e22;
+}
+
+.modal-button.warning:hover {
+    background-color: #d35400;
+}
+
+.modal-button.confirm {
+    background-color: #e74c3c;
+}
+
+.modal-button.confirm:hover {
+    background-color: #c0392b;
 }
 
 .members-table-container {
@@ -207,7 +259,7 @@ const members = [
 @keyframes slide-up {
     from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
     }
 
     to {

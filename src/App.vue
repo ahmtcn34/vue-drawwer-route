@@ -4,11 +4,14 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const isDrawerOpen = computed(() => !!route.matched.find(m => m.components?.drawer))
+const isModalOpen = computed(() => !!route.matched.find(m => m.components?.modal))
 const isMainContentShifted = ref(false)
 
 const drawerVisible = ref(isDrawerOpen.value)
+const modalVisible = ref(isModalOpen.value)
 
 provide('drawerVisible', drawerVisible)
+provide('modalVisible', modalVisible)
 
 const handleDrawerClosing = () => {
   isMainContentShifted.value = false
@@ -34,6 +37,12 @@ watch(isDrawerOpen, (newValue) => {
     isMainContentShifted.value = true
   }
 }, { immediate: true })
+
+watch(isModalOpen, (newValue) => {
+  if (newValue) {
+    modalVisible.value = true
+  }
+}, { immediate: true })
 </script>
 
 <template>
@@ -46,6 +55,7 @@ watch(isDrawerOpen, (newValue) => {
       </router-view>
     </div>
     <router-view name="drawer" />
+    <router-view name="modal" />
   </div>
 </template>
 
